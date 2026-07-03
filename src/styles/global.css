@@ -1,0 +1,244 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+@theme {
+  /* Brand Colors */
+  --color-brand-1: #FFFFFF;
+  --color-brand-2: #0000001A;
+  --color-brand-3: #FFF0;
+  --color-brand-4: #00000080;
+  --color-brand-5: #000000;
+  --color-brand-6: #0000000D;
+  --color-brand-7: #0000004D;
+  --color-brand-8: #FFAA40;
+  --color-brand-9: #B087FF;
+  --color-brand-10: #FFD074;
+  --color-brand-11: #FFF3;
+  --color-brand-12: #FF999940;
+  --color-brand-13: #FF999933;
+  --color-brand-14: #FFE2E2;
+  --color-brand-15: #FF6467;
+  --color-brand-16: #FB2C36;
+  --color-brand-17: #E7000B;
+  --color-brand-18: #82181A;
+  --color-brand-19: #FEF9C2;
+  --color-brand-20: #FFF085;
+  --color-brand-21: #FDC700;
+  --color-brand-22: #F0B100;
+  --color-brand-23: #D08700;
+  --color-brand-24: #A65F00;
+  --color-brand-25: #ECFCCA;
+  --color-brand-26: #D8F999;
+  --color-brand-27: #497D00;
+  --color-brand-28: #DCFCE7;
+  --color-brand-29: #05DF72;
+  --color-brand-30: #00C950;
+  
+  --color-bg-31: #9F9FA9;
+  --color-bg-32: #FFB800;
+  --color-bg-33: #E4E4E7;
+  
+  --color-text-34: #09090B;
+  --color-text-35: #27272A;
+  --color-text-36: #FAFAFA;
+  --color-text-37: #6A7282;
+  --color-text-38: #3F3F46;
+  --color-text-39: #2B7FFF;
+  --color-text-40: #4A5565;
+
+  /* Typography */
+  --font-brand-1: "__Inter_f367f3";
+  --font-brand-2: "__Inter_Fallback_f367f3";
+  --font-brand-3: "__Inter_f367f3,__Inter_Fallback_f367f3";
+
+  /* Border Radius */
+  --radius-brand-1: 10px;
+  --radius-brand-3: 20px;
+  --radius-brand-4: 1rem;
+  --radius-brand-5: 50%;
+  --radius-brand-6: 40px;
+
+  /* Shadows */
+  --shadow-brand-1: 0 0 200px hsla(0,100%,80%,.25),0 0 220px hsla(0,100%,80%,.2);
+  --shadow-brand-2: inset 0 -20px 80px -20px #ffffff1f;
+  --shadow-brand-3: 5px 5px 79px #dbdbdb,-5px -5px 79px #fff;
+  --shadow-brand-4: 0 0 400px rgba(153,255,153,.25),0 0 420px rgba(153,255,153,.2);
+  --shadow-brand-5: 0 0 600px rgba(153,153,255,.25),0 0 620px rgba(153,153,255,.2);
+  --shadow-brand-6: 0 0 400px rgba(255,255,153,.25),0 0 420px rgba(255,255,153,.2);
+}
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    background-color: var(--color-brand-1);
+    color: var(--color-text-34);
+  }
+
+  html.dark body {
+    background-color: var(--color-text-34);
+    color: var(--color-brand-1);
+  }
+}
+
+.scrollbar-hide { scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2147483646; }
+html.dark::view-transition-old(root) { z-index: 2147483646; }
+html.dark::view-transition-new(root) { z-index: 1; }
+
+/* Grid Background */
+.grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+html.dark .grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+
+@keyframes grid {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+.animate-grid {
+  animation: grid 15s linear infinite;
+}
+
+/* Section Header Stripe Animation (from itsvg.in) */
+.nav-ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nav-li {
+  overflow: hidden;
+}
+.nav-a {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: default;
+}
+.nav-a-letters {
+  display: flex;
+}
+.nav-a-letter {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.nav-a.is-playing .nav-a-letter {
+  transform: translateY(-15%);
+}
+.nav-a-letter:nth-child(1) { transition-delay: 0s; }
+.nav-a-letter:nth-child(2) { transition-delay: 0.02s; }
+.nav-a-letter:nth-child(3) { transition-delay: 0.04s; }
+.nav-a-letter:nth-child(4) { transition-delay: 0.06s; }
+.nav-a-letter:nth-child(5) { transition-delay: 0.08s; }
+.nav-a-letter:nth-child(6) { transition-delay: 0.1s; }
+.nav-a-letter:nth-child(7) { transition-delay: 0.12s; }
+.nav-a-letter:nth-child(8) { transition-delay: 0.14s; }
+.nav-a-letter:nth-child(9) { transition-delay: 0.16s; }
+.nav-a-letter:nth-child(10) { transition-delay: 0.18s; }
+
+.nav-a-stripes-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Stripes — hidden by default, shown on hover, positioned between text halves */
+.nav-a-stripe {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 20%; /* Slightly thinner than original 25%, thicker than 12% */
+  bottom: 40%; /* Centered for 20% height */
+  transform: translateX(-101%);
+  opacity: 0;
+}
+
+/* Base delays for staggering */
+.nav-a-stripe--yellow { background-color: #FFD95A; z-index: 1; }
+.nav-a-stripe--turquoise { background-color: #38BDF8; z-index: 2; }
+.nav-a-stripe--purple { background-color: #A78BFA; z-index: 3; }
+
+/* Slide through animation */
+.nav-a.is-playing .nav-a-stripe {
+  animation: stripeSlideThrough 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+.nav-a.is-playing .nav-a-stripe--yellow { animation-delay: 0s; }
+.nav-a.is-playing .nav-a-stripe--turquoise { animation-delay: 0.1s; }
+.nav-a.is-playing .nav-a-stripe--purple { animation-delay: 0.2s; }
+
+@keyframes stripeSlideThrough {
+  0% { transform: translateX(-101%); opacity: 1; }
+  100% { transform: translateX(101%); opacity: 1; }
+}
+
+.nav-a-letters-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  clip-path: inset(0 0 50% 0);
+  pointer-events: none;
+}
+/* The top letters lift up via the .nav-a-letter rule above, we don't need a separate rule here anymore */
+
+/* Wavy Marquee — bidirectional flow (left flows right, right flows left) */
+@keyframes textPathFlowLeft {
+  0%   { startOffset: 0%; }
+  100% { startOffset: 100%; }
+}
+@keyframes textPathFlowRight {
+  0%   { startOffset: 100%; }
+  100% { startOffset: 0%; }
+}
+.textPathLeft {
+  animation: marqueeLeft 40s linear infinite;
+}
+.textPathRight {
+  animation: marqueeRight 40s linear infinite;
+}
+@keyframes marqueeLeft {
+  0%   { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+@keyframes marqueeRight {
+  0%   { offset-distance: 100%; }
+  100% { offset-distance: 0%; }
+}
+
+/* Hero entrance animation */
+.home-hero-heading {
+  animation: heroFadeIn 1s ease-out 0.2s forwards;
+}
+.home-hero-subheading {
+  animation: heroFadeIn 1s ease-out 0.6s forwards;
+}
+@keyframes heroFadeIn {
+  to { opacity: 1; }
+}

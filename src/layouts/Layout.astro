@@ -1,0 +1,98 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FloatingSocials from '../components/FloatingSocials';
+import GridBackground from '../components/GridBackground';
+import MobileNav from '../components/MobileNav';
+import MobileSocialFAB from '../components/MobileSocialFAB';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+    <script is:inline>
+      (function () {
+        var t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', t === 'dark');
+        localStorage.setItem('theme', t);
+
+        if (!sessionStorage.getItem('introPlayed')) {
+          document.documentElement.setAttribute('data-loading', 'true');
+        }
+      })();
+    </script>
+
+    <style is:global>
+      /* Smooth scroll */
+      html { scroll-behavior: smooth; }
+
+      /* Hide scrollbar */
+      ::-webkit-scrollbar { display: none; }
+      * { scrollbar-width: none; }
+
+      /* Custom Cursors */
+      a, button, [role="button"], input, select, textarea, .cursor-pointer {
+        cursor: url('/saber.svg') 4 4, pointer !important;
+      }
+      /* Map Cursors */
+      .leaflet-container, .leaflet-interactive {
+        cursor: url('/mag.svg') 12 12, grab !important;
+      }
+      .leaflet-dragging .leaflet-container {
+        cursor: url('/mag.svg') 12 12, grabbing !important;
+      }
+      /* Grab Cursors */
+      .cursor-grab, .swiper-wrapper {
+        cursor: url('/grab.svg') 12 12, grab !important;
+      }
+      .cursor-grabbing {
+        cursor: url('/grab.svg') 12 12, grabbing !important;
+      }
+
+      /* ② NUCLEAR BLOCK — hide absolutely everything while loader is active.
+         This fires before React mounts, so nothing flashes through. */
+      html[data-loading] body * {
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      /* Whitelist: the loader itself and every element inside it */
+      html[data-loading] [data-loader],
+      html[data-loading] [data-loader] * {
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+      /* Keep background dark so there's no white flash */
+      html[data-loading],
+      html[data-loading] body {
+        overflow: hidden !important;
+        background: #0a0f1c !important;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen w-full bg-white dark:bg-[#0a0f1c] text-gray-900 dark:text-gray-100 overflow-x-hidden">
+    <GridBackground client:only="react" transition:persist="grid" />
+    <Header transition:persist="header" />
+    <FloatingSocials client:only="react" transition:persist="socials" />
+    <MobileNav client:only="react" />
+    <main class="pt-16 relative z-10">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

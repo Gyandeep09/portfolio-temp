@@ -1,0 +1,186 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { PROJECTS } from '../../data/projects';
+import type { Project } from '../../data/types';
+import StackPill from '../../components/StackPill';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return PROJECTS.map(proj => ({
+    params: { slug: proj.slug },
+    props: { proj },
+  }));
+}
+
+interface Props { proj: Project; }
+const { proj } = Astro.props;
+const dp = proj.deepDive;
+const related = PROJECTS.filter(p => p.slug !== proj.slug && p.category === proj.category).slice(0, 3);
+
+const categoryLabel: Record<string, string> = {
+  core: 'Core / Production',
+  midcore: 'Mid-Core / System',
+  casual: 'Casual / Experiment',
+};
+---
+
+<Layout title={`${proj.title} | Portfolio Owner`} description={dp.quickPitch.summary}>
+  <div class="max-w-2xl mx-auto px-6 py-24 min-h-screen">
+
+    <a href="/projects" class="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors mb-12 group">
+      <svg class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      All Projects
+    </a>
+
+    <div class="flex items-center gap-3 mb-5">
+      <span class="text-[9px] font-mono uppercase tracking-[0.25em] text-gray-400 dark:text-gray-600">{categoryLabel[proj.category]}</span>
+      <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-zinc-700"></span>
+      <span class="px-2 py-0.5 rounded-full border border-gray-200 dark:border-zinc-700 text-[9px] font-mono uppercase tracking-wider text-gray-500 dark:text-gray-500 bg-transparent">{proj.tag}</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight mb-4">{proj.title}</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-500 font-mono uppercase tracking-widest mb-10">{proj.type}</p>
+
+    <section class="mb-12">
+      <h2 class="text-[10px] font-mono uppercase tracking-[0.25em] text-gray-400 dark:text-gray-600 mb-5">01 — Project Overview</h2>
+
+      <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">{dp.quickPitch.summary}</p>
+
+      <p class="text-sm text-gray-700 dark:text-gray-300 mb-5 leading-relaxed">{dp.quickPitch.role}</p>
+      <div class="p-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 mb-6">
+        <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-2">Stack</p>
+        <div class="flex flex-wrap gap-1.5 mt-1">
+          {dp.quickPitch.tools.map((t: string) => (
+            <StackPill tech={t} />
+          ))}
+        </div>
+      </div>
+
+      <div class="flex gap-3 flex-wrap">
+        {dp.quickPitch.liveUrl ? (
+          <a href={dp.quickPitch.liveUrl} target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-300 dark:border-zinc-700 text-[10px] font-mono uppercase tracking-widest text-gray-700 dark:text-gray-300 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white bg-transparent transition-all duration-200">View Live ↗</a>
+        ) : (
+          <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-300 dark:border-zinc-700 text-[10px] font-mono uppercase tracking-widest text-gray-500 dark:text-gray-500 bg-transparent opacity-40 cursor-not-allowed">Private / Offline</span>
+        )}
+        {dp.quickPitch.githubUrl && (
+          <a href={dp.quickPitch.githubUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-300 dark:border-zinc-700 text-[10px] font-mono uppercase tracking-widest text-gray-700 dark:text-gray-300 hover:border-gray-900 dark:hover:border-white bg-transparent transition-all duration-200">GitHub ↗</a>
+        )}
+      </div>
+    </section>
+
+    <div class="h-px bg-gray-100 dark:bg-zinc-800 mb-12"></div>
+
+    <section class="mb-12">
+      <h2 class="text-[10px] font-mono uppercase tracking-[0.25em] text-gray-400 dark:text-gray-600 mb-5">02 — The Problem</h2>
+      <div class="space-y-4">
+        <div>
+          <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-1">Goal</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.problem.goal}</p>
+        </div>
+        <div>
+          <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-1">User Issue</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.problem.userIssue}</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="h-px bg-gray-100 dark:bg-zinc-800 mb-12"></div>
+
+    <section class="mb-12">
+      <h2 class="text-[10px] font-mono uppercase tracking-[0.25em] text-gray-400 dark:text-gray-600 mb-5">03 — The Process</h2>
+
+      <div class="space-y-5 mb-8">
+        {dp.process.decisions.map((d: { title: string; detail: string }, idx: number) => (
+          <div class="flex gap-4">
+            <div class="shrink-0 flex flex-col items-center">
+              <div class="w-6 h-6 rounded-full border border-gray-200 dark:border-zinc-700 text-[10px] font-mono text-gray-400 flex items-center justify-center">
+                {String(idx + 1).padStart(2, '0')}
+              </div>
+              {idx < dp.process.decisions.length - 1 && (
+                <div class="w-px flex-1 bg-gray-100 dark:bg-zinc-800 my-2"></div>
+              )}
+            </div>
+            <div class="pb-5">
+              <p class="text-sm font-semibold text-gray-900 dark:text-white mb-1">{d.title}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-500 leading-relaxed">{d.detail}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="mb-6">
+        <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-1">Key Challenge</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.process.challenge}</p>
+      </div>
+
+      <div class="rounded-xl overflow-hidden border border-gray-100 dark:border-zinc-800">
+        <div class="flex items-center gap-2 px-4 py-2.5 bg-gray-50 dark:bg-zinc-900 border-b border-gray-100 dark:border-zinc-800">
+          <div class="flex gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-zinc-700"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-zinc-700"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-gray-200 dark:bg-zinc-700"></span>
+          </div>
+          <span class="text-[10px] font-mono text-gray-400 ml-2">snippet</span>
+        </div>
+        <pre class="overflow-x-auto px-5 py-4 bg-white dark:bg-[#0d1117] text-[11px] font-mono text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre"><code>{dp.process.snippet}</code></pre>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="mb-12">
+      <h2 class="text-[10px] font-mono uppercase tracking-[0.25em] text-gray-400 dark:text-gray-600 mb-5">04 — The Solution</h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.solution.description}</p>
+      {dp.solution.media && (
+        <div class="mt-6 rounded-xl border border-gray-100 dark:border-zinc-800 overflow-hidden shadow-sm">
+          <img src={dp.solution.media} alt={dp.solution.mediaAlt} class="w-full h-auto object-cover" loading="lazy" />
+        </div>
+      )}
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="mb-16">
+      <h2 class="text-[10px] font-mono uppercase tracking-[0.25em] text-gray-400 dark:text-gray-600 mb-5">05 — Results & Learnings</h2>
+      <div class="space-y-5">
+        <div>
+          <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-1">Impact</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.results.impact}</p>
+        </div>
+        <div>
+          <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-1">Learnings</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.results.learnings}</p>
+        </div>
+        <div>
+          <p class="text-[9px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600 mb-1">What I'd do differently</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{dp.results.nextTime}</p>
+        </div>
+      </div>
+    </section>
+
+    {related.length > 0 && (
+      <div class="border-t border-gray-100 dark:border-zinc-800 pt-10">
+        <p class="text-[10px] font-mono uppercase tracking-[0.25em] text-gray-400 mb-5">Related</p>
+        <div>
+          {related.map((r: Project) => (
+            <a href={`/projects/${r.slug}`}
+              class="group flex items-center justify-between py-3.5 border-b border-gray-100 dark:border-zinc-800 hover:border-gray-300 dark:hover:border-zinc-600 transition-colors">
+              <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{r.title}</span>
+              <svg class="w-3 h-3 text-gray-300 group-hover:text-gray-600 group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+  </div>
+</Layout>
+
+
+

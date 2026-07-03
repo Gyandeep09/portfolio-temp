@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FigmaLoader from '../components/FigmaLoader';
+import KineticHero from '../components/KineticHero';
+import Experience from '../components/Experience';
+import Projects from '../components/Projects';
+import Principles from '../components/Principles';
+import InteractiveMap from '../components/InteractiveMap';
+import Biography from '../components/Biography';
+import GlobalClickBurst from '../components/GlobalClickBurst';
+---
+
+<Layout
+  title="Portfolio Owner | Full-Stack Developer"
+  description="Portfolio of Portfolio Owner — Full-Stack Web Developer specializing in scalable, user-centric web applications with a focus on performance and accessibility."
+>
+  <FigmaLoader client:only="react" />
+
+  <GlobalClickBurst client:load />
+
+  <KineticHero client:only="react" />
+
+  <Biography client:load />
+
+  <Experience client:load />
+
+  <Projects client:load />
+
+  <Principles client:load />
+
+  <InteractiveMap client:visible />
+</Layout>
